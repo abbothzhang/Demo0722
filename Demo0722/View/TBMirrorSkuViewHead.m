@@ -12,6 +12,8 @@
 #define TBMIRROR_SKUVIEW_HEAD_HEIGHT        45
 #define WITH_SCALE                          1
 
+#define TBMIRROR_COLOR_ORANGE               [UIColor colorWithHex:0xff5000]
+
 @interface TBMirrorSkuViewHead()
 
 @property (nonatomic,strong) UILabel        *pricePreLabel;
@@ -50,12 +52,12 @@
     buyBtn.center = CGPointMake(buyBtn.center.x, self.frame.size.height/2);
     buyBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [buyBtn setTitle:@"立即购买" forState:UIControlStateNormal];
-    [buyBtn setTitleColor:[UIColor colorWithHex:0xff5000] forState:UIControlStateNormal];
+    [buyBtn setTitleColor:TBMIRROR_COLOR_ORANGE forState:UIControlStateNormal];
     buyBtn.backgroundColor = [UIColor whiteColor];
     //设置边框
     buyBtn.layer.cornerRadius = 2.f;//圆角半径
     buyBtn.layer.borderWidth = 0.5f;//边框宽度
-    [buyBtn.layer setBorderColor:[UIColor colorWithHex:0xff5000].CGColor];
+    [buyBtn.layer setBorderColor:TBMIRROR_COLOR_ORANGE.CGColor];
     [buyBtn addTarget:self action:@selector(buyBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     //设置分割线
@@ -98,7 +100,7 @@
         _pricePreLabel = [[UILabel alloc] initWithFrame:CGRectMake(12, 21, 14, 14)];
 //        _pricePreLabel.center = CGPointMake(_pricePreLabel.center.x, self.frame.size.height/2);
         _pricePreLabel.font = [UIFont systemFontOfSize:14.f];
-        _pricePreLabel.textColor = [UIColor colorWithHex:0xff5000];
+        _pricePreLabel.textColor = TBMIRROR_COLOR_ORANGE;
         _pricePreLabel.text = @"￥";
     }
     return _pricePreLabel;
@@ -108,7 +110,7 @@
     if (_priceLabel == nil) {
         _priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(26, 15, 150*WITH_SCALE, 21)];
         _priceLabel.font = [UIFont systemFontOfSize:21.f];
-        _priceLabel.textColor = [UIColor colorWithHex:0xff5000];//[UIColor alloc] initWithRed:<#(CGFloat)#> green:<#(CGFloat)#> blue:<#(CGFloat)#> alpha:<#(CGFloat)#>
+        _priceLabel.textColor = TBMIRROR_COLOR_ORANGE;//[UIColor alloc] initWithRed:<#(CGFloat)#> green:<#(CGFloat)#> blue:<#(CGFloat)#> alpha:<#(CGFloat)#>
     }
     //如果价格为空，那么隐藏价格前缀￥
     if (self.price == nil || [self.price isEqualToString:@""]) {

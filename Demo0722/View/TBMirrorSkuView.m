@@ -18,6 +18,11 @@
 
 #define WITH_SCALE                              1
 
+#define TBMIRROR_COLOR_ORANGE                   [UIColor colorWithHex:0xff5000]
+#define TBMIRROR_COLOR_GRAY_LIGHT               [UIColor colorWithHex:0xf5f5f5]
+#define TBMIRROR_COLOR_GRAY_DARK                [UIColor colorWithHex:0x051b28]
+
+
 @interface TBMirrorSkuView()<UITableViewDataSource,UITableViewDelegate>
 
 //data
@@ -32,8 +37,10 @@
 @property (nonatomic,strong) UILabel                    *secondPropNameLabel;//第二个属性名
 @property (nonatomic,strong) UITableView                *secondTableView;
 
-//记录第一栏上一次点击的按钮
+//记录第一栏上一次的点击
 @property (nonatomic,strong) UILabel                   *fristTablePreClickBtn;
+//记录第二栏上一次的点击
+@property (nonatomic,strong) UILabel                   *secondTablePreClickBtn;
 
 
 
@@ -58,8 +65,8 @@
     self.headView.price = @"888";//test
     [self addSubview:self.fristPropNameLabel];
     [self addSubview:self.fristTableView];
-//    [self addSubview:self.secondPropNameLabel];
-//    [self addSubview:self.secondTableView];
+    [self addSubview:self.secondPropNameLabel];
+    [self addSubview:self.secondTableView];
 }
 
 
@@ -102,26 +109,22 @@
         }
         
         NSString *title = [self.fristTableArray objectAtIndex:indexPath.row];
-//        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 49, 19)];
-////        label.backgroundColor = [UIColor orangeColor];
-//        label.text = title;
-//        label.textAlignment = NSTextAlignmentCenter;
-//        UIView *btnView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 20)];
-//        label.center = btnView.center;
-//        [btnView addSubview:label];
-//        btnView.center = CGPointMake(TBMIRROR_TABLE_HEIGHT/2,TBMIRROR_CELL_HEIGHT/2);
-//        btnView.tag = 0x111;
-//        btnView.backgroundColor = [UIColor redColor];
+        [cell.contentView addSubview:[self getCellLabelWithTitle:title indexPath:indexPath tableView:tableView]];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.contentView.transform = CGAffineTransformMakeRotation(M_PI / 2);
         
-//        UIButton *propBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 66*WITH_SCALE, 27)];
-//        propBtn.center = CGPointMake(TBMIRROR_CELL_HEIGHT/2,TBMIRROR_TABLE_HEIGHT/2);
-//        propBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-//        [propBtn setTitle:title forState:UIControlStateNormal];
-//        [propBtn setTitleColor:[UIColor colorWithHex:0x051b28] forState:UIControlStateNormal];
-//        propBtn.backgroundColor = [UIColor colorWithHex:0xf5f5f5];
-//        //设置边框
-//        propBtn.layer.cornerRadius = 10.f;//圆角半径
-//        propBtn.tag = 0x111;
+        
+        return cell;
+    }else{
+        
+        static NSString *TBMIRROR_TABLE2_REUSE = @"TBMIRROR_TABLE2_REUSE";
+        TBMirrorDetailTableCell *cell = [tableView dequeueReusableCellWithIdentifier:TBMIRROR_TABLE2_REUSE];
+        if (cell == nil) {
+            cell = [[TBMirrorDetailTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TBMIRROR_TABLE2_REUSE];
+        }
+        
+        TBMirrorSkuModel *skuModel = [self.secondTableArray objectAtIndex:indexPath.row];
+        NSString *title = skuModel.cspuId;
         
         CGRect labelFrame = CGRectMake(0, 0, 66*WITH_SCALE, 27);
         UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
@@ -134,36 +137,59 @@
         }else{
             label.frame = CGRectMake(label.frame.origin.x, label.frame.origin.y, label.frame.size.width, 27);
         }
-
+        
         label.font = [UIFont systemFontOfSize:12];
-        label.textColor = [UIColor colorWithHex:0x051b28];
-        label.backgroundColor = [UIColor colorWithHex:0xf5f5f5];
+        label.textColor = TBMIRROR_COLOR_GRAY_DARK;
+        label.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
         label.layer.cornerRadius = 10.f;
         label.layer.masksToBounds = YES;
         label.textAlignment = NSTextAlignmentCenter;
         label.tag = 0x111;
         
+        
         [cell.contentView addSubview:label];
-//        cell.contentView.backgroundColor = [UIColor orangeColor];
-//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.contentView.backgroundColor = [UIColor orangeColor];
+        //        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI / 2);
-
-        
-        return cell;
-    }else{
-        
-        static NSString *TBMIRROR_TABLE2_REUSE = @"TBMIRROR_TABLE2_REUSE";
-        TBMirrorDetailTableCell *cell = [tableView dequeueReusableCellWithIdentifier:TBMIRROR_TABLE2_REUSE];
-        if (cell == nil) {
-            cell = [[TBMirrorDetailTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TBMIRROR_TABLE2_REUSE];
-        }
-        
-//        TBMirrorSkuModel *skuModel = [self.secondTableArray objectAtIndex:indexPath.row];
-//        NSString *btnTitle = skuModel.name;
-//        [cell.btn setTitle:btnTitle forState:UIControlStateNormal];
         
         return cell;
     }
+}
+
+-(UILabel*)getCellLabelWithTitle:(NSString *)title indexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
+    CGRect labelFrame = CGRectMake(0, 0, 66*WITH_SCALE, 27);
+    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
+    label.text = title;
+    label.center = CGPointMake(TBMIRROR_CELL_HEIGHT/2,TBMIRROR_TABLE_HEIGHT/2);
+    [label sizeToFit];
+    if (label.frame.size.width < 66*WITH_SCALE) {
+        label.frame = labelFrame;
+        label.center = CGPointMake(TBMIRROR_CELL_HEIGHT/2,TBMIRROR_TABLE_HEIGHT/2);
+    }else{
+        label.frame = CGRectMake(label.frame.origin.x, label.frame.origin.y, label.frame.size.width, 27);
+    }
+    
+    label.font = [UIFont systemFontOfSize:12];
+    label.textColor = TBMIRROR_COLOR_GRAY_DARK;
+    label.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
+    label.layer.cornerRadius = 10.f;
+    label.layer.masksToBounds = YES;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.tag = 0x111;
+    
+    //第一个默认选上
+    if (indexPath.row == 0) {
+        label.textColor = [UIColor whiteColor];
+        label.backgroundColor = TBMIRROR_COLOR_ORANGE;
+        if (tableView == self.fristTableView) {
+            _fristTablePreClickBtn = label;
+        }else{
+            _secondTablePreClickBtn = label;
+        }
+
+    }
+    
+    return label;
 }
 
 #pragma mark - UITableViewDelegate
@@ -173,13 +199,30 @@
         self.secondTableArray = [self.itemDic objectForKey:secondTableArrayKey];
         [self.secondTableView reloadData];
         TBMirrorDetailTableCell *cell = (TBMirrorDetailTableCell*)[tableView cellForRowAtIndexPath:indexPath];
-        UILabel *propBtn = (UILabel*)[cell.contentView viewWithTag:0x111];
-        propBtn.backgroundColor = [UIColor greenColor];
+        UILabel *propLabel = (UILabel*)[cell.contentView viewWithTag:0x111];
+        //改变自己状态
+//        if (CGColorEqualToColor(propLabel.backgroundColor.CGColor, TBMIRROR_COLOR_ORANGE.CGColor)) {
+//            propLabel.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
+//            propLabel.textColor = TBMIRROR_COLOR_GRAY_DARK;
+//        }else{
+//            propLabel.backgroundColor = TBMIRROR_COLOR_ORANGE;
+//            propLabel.textColor = [UIColor whiteColor];
+//        }
+        
+        //只要选中自己颜色，就是选中的样式
+        propLabel.backgroundColor = TBMIRROR_COLOR_ORANGE;
+        propLabel.textColor = [UIColor whiteColor];
+
+        //改变别人状态
+        //如果点击的不是自己，即这一次点击的是另一个按钮，那么要改变之前点击的那个按钮的状态
         if (_fristTablePreClickBtn == nil) {
-            _fristTablePreClickBtn = propBtn;
-        }else{
-            _fristTablePreClickBtn.backgroundColor = [UIColor redColor];
-            _fristTablePreClickBtn = propBtn;
+            _fristTablePreClickBtn = propLabel;
+        }
+        if (propLabel != _fristTablePreClickBtn) {
+            _fristTablePreClickBtn.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
+            _fristTablePreClickBtn.textColor = TBMIRROR_COLOR_GRAY_DARK;
+            _fristTablePreClickBtn = propLabel;
+
         }
         
 
@@ -203,7 +246,7 @@
         CGFloat originY = self.headView.frame.origin.x + self.headView.frame.size.height+12;
         _fristPropNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(TBMIRROR_SKUVIEW_MARGIN_LEFT, originY, 200, 14)];
         _fristPropNameLabel.font = [UIFont systemFontOfSize:14.f];
-        _fristPropNameLabel.textColor = [UIColor colorWithHex:0x051b28];
+        _fristPropNameLabel.textColor = TBMIRROR_COLOR_GRAY_DARK;
 //        _fristPropNameLabel.backgroundColor = [UIColor greenColor];//test
         _fristPropNameLabel.text = @"款式";//test
     }
@@ -212,10 +255,10 @@
 
 -(UILabel *)secondPropNameLabel{
     if (_secondPropNameLabel == nil) {
-        CGFloat originY = self.fristTableView.frame.origin.x + self.fristTableView.frame.size.height+15;
+        CGFloat originY = self.fristTableView.frame.origin.y + self.fristTableView.frame.size.height+8;
         _secondPropNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(TBMIRROR_SKUVIEW_MARGIN_LEFT, originY, 200, 14)];
         _secondPropNameLabel.font = [UIFont systemFontOfSize:14.f];
-        _secondPropNameLabel.textColor = [UIColor colorWithHex:0x051b28];
+        _secondPropNameLabel.textColor = TBMIRROR_COLOR_GRAY_DARK;
         _secondPropNameLabel.text = @"颜色";//test
     }
     return _secondPropNameLabel;
@@ -231,17 +274,23 @@
         _fristTableView.showsVerticalScrollIndicator = NO;//隐藏滚动条
         _fristTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _fristTableView.transform = CGAffineTransformMakeRotation(-M_PI / 2);
+        //默认第一个选中
+        self.secondTableArray = [self.itemDic objectForKey:[self.fristTableArray objectAtIndex:0]];
     }
     return _fristTableView;
 }
 
 -(UITableView *)secondTableView{
     if (_secondTableView == nil) {
-        _secondTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,  160, self.frame.size.width, 80)];
+        _secondTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, TBMIRROR_TABLE_HEIGHT, self.frame.size.width-12)];
+        _secondTableView.center = CGPointMake(self.frame.size.width/2, 141+TBMIRROR_TABLE_HEIGHT/2);
         _secondTableView.dataSource = self;
         _secondTableView.delegate = self;
-        _secondTableView.backgroundColor = [UIColor greenColor];
-//        _secondTableView.transform = CGAffineTransformMakeRotation(-M_PI / 2);
+        _secondTableView.backgroundColor = [UIColor yellowColor];
+        _secondTableView.showsVerticalScrollIndicator = NO;//隐藏滚动条
+        _secondTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _secondTableView.transform = CGAffineTransformMakeRotation(-M_PI / 2);
+        
     }
     return _secondTableView;
 }

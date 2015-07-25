@@ -21,6 +21,10 @@
     self.view.backgroundColor = [UIColor yellowColor];
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] initWithCapacity:3];
     TBMirrorSkuModel *skuModel = [[TBMirrorSkuModel alloc] init];
+    //test
+    skuModel.price = @"尺寸";//先暂时用作propName使用
+    skuModel.cspuId = @"太阳镜";//先暂时用作sku
+    
     NSArray *array1 = [[NSArray alloc] initWithObjects:skuModel,nil];
     NSArray *array2 = [[NSArray alloc] initWithObjects:skuModel,skuModel,nil];
     NSArray *array3 = [[NSArray alloc] initWithObjects:skuModel,skuModel,skuModel,skuModel,nil];
