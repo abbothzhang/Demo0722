@@ -12,6 +12,9 @@
 #import "TBMirrorSkuViewHead.h"
 #import "UIColor+Hex.h"
 
+#define TBMIRROR_SKUVIEW_HEIGHT                 189
+#define TBMIRROR_SKUVIEW_HEADER_HEIGHT          45
+
 #define TBMIRROR_CELL_HEIGHT                    78
 #define TBMIRROR_TABLE_HEIGHT                   40
 #define TBMIRROR_SKUVIEW_MARGIN_LEFT            12
@@ -23,7 +26,9 @@
 #define TBMIRROR_COLOR_GRAY_DARK                [UIColor colorWithHex:0x051b28]
 
 
-@interface TBMirrorSkuView()<UITableViewDataSource,UITableViewDelegate,TBMirrorSkuViewHeadDelegate>
+@interface TBMirrorSkuView()<UITableViewDataSource,UITableViewDelegate,TBMirrorSkuViewHeadDelegate>{
+    CGFloat   TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y;
+}
 
 //data
 @property (nonatomic,strong) NSDictionary               *itemDic;
@@ -55,6 +60,8 @@
 -(void)setData:(NSDictionary *)data{
     self.itemDic = data;
     self.fristTableArray = [self.itemDic allKeys];
+    TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y = self.frame.origin.y;
+    self.frame = CGRectMake(0, TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y, self.frame.size.width, TBMIRROR_SKUVIEW_HEIGHT);
     [self setUpView];
 
 }
@@ -125,38 +132,6 @@
         
         TBMirrorSkuModel *skuModel = [self.secondTableArray objectAtIndex:indexPath.row];
         NSString *title = skuModel.cspuId;
-        
-//        CGRect labelFrame = CGRectMake(0, 0, 66*WITH_SCALE, 27);
-//        UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-//        label.text = title;
-//        label.center = CGPointMake(TBMIRROR_CELL_HEIGHT/2,TBMIRROR_TABLE_HEIGHT/2);
-//        [label sizeToFit];
-//        if (label.frame.size.width < 66*WITH_SCALE) {
-//            label.frame = labelFrame;
-//            label.center = CGPointMake(TBMIRROR_CELL_HEIGHT/2,TBMIRROR_TABLE_HEIGHT/2);
-//        }else{
-//            label.frame = CGRectMake(label.frame.origin.x, label.frame.origin.y, label.frame.size.width, 27);
-//        }
-//        
-//        label.font = [UIFont systemFontOfSize:12];
-//        label.textColor = TBMIRROR_COLOR_GRAY_DARK;
-//        label.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
-//        label.layer.cornerRadius = 10.f;
-//        label.layer.masksToBounds = YES;
-//        label.textAlignment = NSTextAlignmentCenter;
-//        label.tag = 112;
-//        
-//        if (indexPath.row == 0) {
-//            label.textColor = [UIColor whiteColor];
-//            label.backgroundColor = TBMIRROR_COLOR_ORANGE;
-//            if (tableView == self.fristTableView) {
-//                _fristTablePreClickBtn = label;
-//            }else{
-//                _secondTablePreClickBtn = label;
-//            }
-//            
-//        }
-        
         
         [cell.contentView addSubview:[self getCellLabelWithTitle:title indexPath:indexPath tableView:tableView]];
 //        cell.contentView.backgroundColor = [UIColor orangeColor];
@@ -258,8 +233,20 @@
 
 #pragma mark - TBMirrorSkuViewHeadDelegate
 -(void)arrowBtnClicked:(BOOL)isFold{
-    if (self.delegate && [self.delegate respondsToSelector:@selector(arrowBtnClicked:)]) {
-        [self.delegate arrowBtnClicked:isFold];
+    if (isFold) {
+        TBMirrorSkuView __weak *weakSelf = self;
+        [UIView animateWithDuration:0.5f animations:^{
+           weakSelf.frame = CGRectMake(0, TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y, self.frame.size.width, TBMIRROR_SKUVIEW_HEIGHT);
+
+        }];
+        
+    }else{
+        TBMirrorSkuView __weak *weakSelf = self;
+        [UIView animateWithDuration:0.5f animations:^{
+            CGFloat originY = TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y + (TBMIRROR_SKUVIEW_HEIGHT - TBMIRROR_SKUVIEW_HEADER_HEIGHT);
+            weakSelf.frame = CGRectMake(0,originY, self.frame.size.width, TBMIRROR_SKUVIEW_HEADER_HEIGHT);
+        }];
+        
     }
 }
 
@@ -272,7 +259,7 @@
 #pragma mark - getter
 -(TBMirrorSkuViewHead *)headView{
     if (_headView == nil) {
-        _headView = [[TBMirrorSkuViewHead alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 45)];
+        _headView = [[TBMirrorSkuViewHead alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, TBMIRROR_SKUVIEW_HEADER_HEIGHT)];
         _headView.delegate = self;
     }
     return _headView;
@@ -307,7 +294,7 @@
         _fristTableView.center = CGPointMake(self.frame.size.width/2, 75+TBMIRROR_TABLE_HEIGHT/2);
         _fristTableView.dataSource = self;
         _fristTableView.delegate = self;
-        _fristTableView.backgroundColor = [UIColor yellowColor];
+//        _fristTableView.backgroundColor = [UIColor yellowColor];
         _fristTableView.showsVerticalScrollIndicator = NO;//隐藏滚动条
         _fristTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _fristTableView.transform = CGAffineTransformMakeRotation(-M_PI / 2);
@@ -323,7 +310,7 @@
         _secondTableView.center = CGPointMake(self.frame.size.width/2, 141+TBMIRROR_TABLE_HEIGHT/2);
         _secondTableView.dataSource = self;
         _secondTableView.delegate = self;
-        _secondTableView.backgroundColor = [UIColor yellowColor];
+//        _secondTableView.backgroundColor = [UIColor yellowColor];
         _secondTableView.showsVerticalScrollIndicator = NO;//隐藏滚动条
         _secondTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _secondTableView.transform = CGAffineTransformMakeRotation(-M_PI / 2);

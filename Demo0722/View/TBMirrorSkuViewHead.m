@@ -74,10 +74,22 @@
 
 #pragma mark - click 
 -(void)arrowClick:(UIButton *)btn{
-    self.isFold = !self.isFold;
     if (self.delegate && [self.delegate respondsToSelector:@selector(arrowBtnClicked:)]) {
         [self.delegate arrowBtnClicked:self.isFold];
     }
+    
+    TBMirrorSkuViewHead __weak *weakSelf = self;
+    [UIView animateWithDuration:0.5f animations:^{
+        if (weakSelf.isFold) {
+            btn.transform = CGAffineTransformMakeRotation(0);
+        }else{
+           btn.transform = CGAffineTransformMakeRotation(M_PI);
+        }
+        
+    }];
+    
+    self.isFold = !self.isFold;
+    
 }
 
 -(void)buyBtnClicked:(UIButton *)btn{

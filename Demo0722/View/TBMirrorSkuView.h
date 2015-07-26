@@ -10,8 +10,6 @@
 
 @protocol TBMirrorSkuViewDelegate <NSObject>
 
--(void)arrowBtnClicked:(BOOL)isFold;
-
 -(void)buyBtnClicked;
 
 @end
