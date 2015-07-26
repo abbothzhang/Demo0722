@@ -144,12 +144,23 @@
         label.layer.cornerRadius = 10.f;
         label.layer.masksToBounds = YES;
         label.textAlignment = NSTextAlignmentCenter;
-        label.tag = 0x111;
+        label.tag = 112;
+        
+        if (indexPath.row == 0) {
+            label.textColor = [UIColor whiteColor];
+            label.backgroundColor = TBMIRROR_COLOR_ORANGE;
+            if (tableView == self.fristTableView) {
+                _fristTablePreClickBtn = label;
+            }else{
+                _secondTablePreClickBtn = label;
+            }
+            
+        }
         
         
         [cell.contentView addSubview:label];
         cell.contentView.backgroundColor = [UIColor orangeColor];
-        //        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI / 2);
         
         return cell;
@@ -175,7 +186,7 @@
     label.layer.cornerRadius = 10.f;
     label.layer.masksToBounds = YES;
     label.textAlignment = NSTextAlignmentCenter;
-    label.tag = 0x111;
+    label.tag = 111;
     
     //第一个默认选上
     if (indexPath.row == 0) {
@@ -199,7 +210,7 @@
         self.secondTableArray = [self.itemDic objectForKey:secondTableArrayKey];
         [self.secondTableView reloadData];
         TBMirrorDetailTableCell *cell = (TBMirrorDetailTableCell*)[tableView cellForRowAtIndexPath:indexPath];
-        UILabel *propLabel = (UILabel*)[cell.contentView viewWithTag:0x111];
+        UILabel *propLabel = (UILabel*)[cell.contentView viewWithTag:111];
         //改变自己状态
 //        if (CGColorEqualToColor(propLabel.backgroundColor.CGColor, TBMIRROR_COLOR_ORANGE.CGColor)) {
 //            propLabel.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
@@ -228,6 +239,23 @@
 
     }else{
        //上妆
+        TBMirrorDetailTableCell *cell = (TBMirrorDetailTableCell*)[tableView cellForRowAtIndexPath:indexPath];
+        UILabel *propLabel = (UILabel*)[cell.contentView viewWithTag:112];
+        //只要选中自己颜色，就是选中的样式
+        propLabel.backgroundColor = TBMIRROR_COLOR_ORANGE;
+        propLabel.textColor = [UIColor whiteColor];
+        
+        //改变别人状态
+        //如果点击的不是自己，即这一次点击的是另一个按钮，那么要改变之前点击的那个按钮的状态
+        if (_secondTablePreClickBtn == nil) {
+            _secondTablePreClickBtn = propLabel;
+        }
+        if (propLabel != _secondTablePreClickBtn) {
+            _secondTablePreClickBtn.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
+            _secondTablePreClickBtn.textColor = TBMIRROR_COLOR_GRAY_DARK;
+            _secondTablePreClickBtn = propLabel;
+            
+        }
         
     }
 
