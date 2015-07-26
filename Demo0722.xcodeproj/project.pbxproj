@@ -14,6 +14,9 @@
 		500E8EF91B60D4670035ABF7 /* TBMirrorItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 500E8EF81B60D4670035ABF7 /* TBMirrorItemModel.m */; };
 		502A40B41B6142660006E8E3 /* TBDetailSkuPropsValuesModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 502A40B31B6142660006E8E3 /* TBDetailSkuPropsValuesModel.m */; };
 		502A40B71B6142B10006E8E3 /* TBDetailSkuPropsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 502A40B61B6142B10006E8E3 /* TBDetailSkuPropsModel.m */; };
+		506F79261B651FEE00E301B1 /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 506F79241B651FEE00E301B1 /* UIColor+Hex.m */; };
+		506F79291B6520B800E301B1 /* ZHHint.m in Sources */ = {isa = PBXBuildFile; fileRef = 506F79281B6520B800E301B1 /* ZHHint.m */; };
+		506F792C1B6520FF00E301B1 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 506F792B1B6520FF00E301B1 /* MBProgressHUD.m */; };
 		50BC06211B5F49390076E383 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BC06201B5F49390076E383 /* main.m */; };
 		50BC06241B5F49390076E383 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BC06231B5F49390076E383 /* AppDelegate.m */; };
 		50BC06271B5F49390076E383 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BC06261B5F49390076E383 /* ViewController.m */; };
@@ -22,7 +25,6 @@
 		50BC062F1B5F49390076E383 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50BC062D1B5F49390076E383 /* LaunchScreen.xib */; };
 		50BC063B1B5F49390076E383 /* Demo0722Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BC063A1B5F49390076E383 /* Demo0722Tests.m */; };
 		50F1A73B1B61E47800E7BB76 /* TBMirrorSkuViewHead.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F1A73A1B61E47800E7BB76 /* TBMirrorSkuViewHead.m */; };
-		50F1A7401B6215CE00E7BB76 /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F1A73E1B6215CE00E7BB76 /* UIColor+Hex.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,12 @@
 		502A40B31B6142660006E8E3 /* TBDetailSkuPropsValuesModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TBDetailSkuPropsValuesModel.m; path = Model/TBDetailSkuPropsValuesModel.m; sourceTree = "<group>"; };
 		502A40B51B6142B10006E8E3 /* TBDetailSkuPropsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TBDetailSkuPropsModel.h; path = Model/TBDetailSkuPropsModel.h; sourceTree = "<group>"; };
 		502A40B61B6142B10006E8E3 /* TBDetailSkuPropsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TBDetailSkuPropsModel.m; path = Model/TBDetailSkuPropsModel.m; sourceTree = "<group>"; };
+		506F79231B651FEE00E301B1 /* UIColor+Hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+Hex.h"; path = "Util/UIColor+Hex.h"; sourceTree = "<group>"; };
+		506F79241B651FEE00E301B1 /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+Hex.m"; path = "Util/UIColor+Hex.m"; sourceTree = "<group>"; };
+		506F79271B6520B800E301B1 /* ZHHint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHHint.h; sourceTree = "<group>"; };
+		506F79281B6520B800E301B1 /* ZHHint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHHint.m; sourceTree = "<group>"; };
+		506F792A1B6520FF00E301B1 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		506F792B1B6520FF00E301B1 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		50BC061B1B5F49390076E383 /* Demo0722.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo0722.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50BC061F1B5F49390076E383 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50BC06201B5F49390076E383 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -65,8 +73,6 @@
 		50BC063A1B5F49390076E383 /* Demo0722Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Demo0722Tests.m; sourceTree = "<group>"; };
 		50F1A7391B61E47800E7BB76 /* TBMirrorSkuViewHead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TBMirrorSkuViewHead.h; path = View/TBMirrorSkuViewHead.h; sourceTree = "<group>"; };
 		50F1A73A1B61E47800E7BB76 /* TBMirrorSkuViewHead.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TBMirrorSkuViewHead.m; path = View/TBMirrorSkuViewHead.m; sourceTree = "<group>"; };
-		50F1A73D1B6215CE00E7BB76 /* UIColor+Hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Hex.h"; sourceTree = "<group>"; };
-		50F1A73E1B6215CE00E7BB76 /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Hex.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,8 +105,6 @@
 		500E8EE01B5F70C80035ABF7 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				50F1A73D1B6215CE00E7BB76 /* UIColor+Hex.h */,
-				50F1A73E1B6215CE00E7BB76 /* UIColor+Hex.m */,
 				50F1A7391B61E47800E7BB76 /* TBMirrorSkuViewHead.h */,
 				50F1A73A1B61E47800E7BB76 /* TBMirrorSkuViewHead.m */,
 				500E8EE11B5F711C0035ABF7 /* TBMirrorSkuView.h */,
@@ -124,6 +128,19 @@
 				502A40B31B6142660006E8E3 /* TBDetailSkuPropsValuesModel.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		506F791B1B651E4700E301B1 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				506F79271B6520B800E301B1 /* ZHHint.h */,
+				506F79281B6520B800E301B1 /* ZHHint.m */,
+				506F79231B651FEE00E301B1 /* UIColor+Hex.h */,
+				506F79241B651FEE00E301B1 /* UIColor+Hex.m */,
+				506F792A1B6520FF00E301B1 /* MBProgressHUD.h */,
+				506F792B1B6520FF00E301B1 /* MBProgressHUD.m */,
+			);
+			name = Util;
 			sourceTree = "<group>";
 		};
 		50BC06121B5F49380076E383 = {
@@ -150,6 +167,7 @@
 				500E8EE41B5F80C80035ABF7 /* Model */,
 				500E8EE01B5F70C80035ABF7 /* View */,
 				500E8EDC1B5F70950035ABF7 /* ViewController */,
+				506F791B1B651E4700E301B1 /* Util */,
 				50BC061E1B5F49390076E383 /* Supporting Files */,
 			);
 			path = Demo0722;
@@ -289,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				500E8EE71B5F83450035ABF7 /* TBMirrorSkuModel.m in Sources */,
+				506F79261B651FEE00E301B1 /* UIColor+Hex.m in Sources */,
 				50BC06271B5F49390076E383 /* ViewController.m in Sources */,
 				50BC06241B5F49390076E383 /* AppDelegate.m in Sources */,
 				502A40B71B6142B10006E8E3 /* TBDetailSkuPropsModel.m in Sources */,
@@ -296,10 +315,11 @@
 				50F1A73B1B61E47800E7BB76 /* TBMirrorSkuViewHead.m in Sources */,
 				500E8EEA1B5F88BB0035ABF7 /* TBMirrorDetailTableCell.m in Sources */,
 				500E8EDF1B5F70B70035ABF7 /* DemoViewController.m in Sources */,
+				506F79291B6520B800E301B1 /* ZHHint.m in Sources */,
 				500E8EE31B5F711C0035ABF7 /* TBMirrorSkuView.m in Sources */,
 				500E8EF91B60D4670035ABF7 /* TBMirrorItemModel.m in Sources */,
 				502A40B41B6142660006E8E3 /* TBDetailSkuPropsValuesModel.m in Sources */,
-				50F1A7401B6215CE00E7BB76 /* UIColor+Hex.m in Sources */,
+				506F792C1B6520FF00E301B1 /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

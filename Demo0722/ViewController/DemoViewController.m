@@ -9,8 +9,9 @@
 #import "DemoViewController.h"
 #import "TBMirrorSkuView.h"
 #import "TBMirrorSkuModel.h"
+#import "ZHHint.h"
 
-@interface DemoViewController ()
+@interface DemoViewController ()<TBMirrorSkuViewDelegate>
 
 @end
 
@@ -44,12 +45,20 @@
     
     CGRect horiViewFrame = CGRectMake(0, self.view.frame.size.height - 189, self.view.frame.size.width, 189);
     TBMirrorSkuView *horiView = [[TBMirrorSkuView alloc] initWithFrame:horiViewFrame];
+    horiView.delegate = self;
     horiView.backgroundColor = [UIColor whiteColor];
     [horiView setData:dic];
     [self.view addSubview:horiView];
 }
 
+-(void)arrowBtnClicked:(BOOL)isFold{
+    NSString *str = [NSString stringWithFormat:@"ifFold->%d",isFold];
+    [ZHHint showToast:str];
+}
 
+-(void)buyBtnClicked{
+    [ZHHint showToast:@"buyClicked"];
+}
 
 
 

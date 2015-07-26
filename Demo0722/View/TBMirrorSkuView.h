@@ -8,7 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol TBMirrorSkuViewDelegate <NSObject>
+
+-(void)arrowBtnClicked:(BOOL)isFold;
+
+-(void)buyBtnClicked;
+
+@end
+
 @interface TBMirrorSkuView : UIView
+
+@property (nonatomic,strong) id<TBMirrorSkuViewDelegate>            delegate;
 
 -(void)setData:(NSDictionary *)data;
 

@@ -23,7 +23,7 @@
 #define TBMIRROR_COLOR_GRAY_DARK                [UIColor colorWithHex:0x051b28]
 
 
-@interface TBMirrorSkuView()<UITableViewDataSource,UITableViewDelegate>
+@interface TBMirrorSkuView()<UITableViewDataSource,UITableViewDelegate,TBMirrorSkuViewHeadDelegate>
 
 //data
 @property (nonatomic,strong) NSDictionary               *itemDic;
@@ -256,10 +256,24 @@
 
 }
 
+#pragma mark - TBMirrorSkuViewHeadDelegate
+-(void)arrowBtnClicked:(BOOL)isFold{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(arrowBtnClicked:)]) {
+        [self.delegate arrowBtnClicked:isFold];
+    }
+}
+
+-(void)buyBtnClicked{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(buyBtnClicked)]) {
+        [self.delegate buyBtnClicked];
+    }
+}
+
 #pragma mark - getter
 -(TBMirrorSkuViewHead *)headView{
     if (_headView == nil) {
         _headView = [[TBMirrorSkuViewHead alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 45)];
+        _headView.delegate = self;
     }
     return _headView;
 }
