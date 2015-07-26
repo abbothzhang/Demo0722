@@ -159,7 +159,7 @@
         
         
         [cell.contentView addSubview:label];
-        cell.contentView.backgroundColor = [UIColor orangeColor];
+//        cell.contentView.backgroundColor = [UIColor orangeColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI / 2);
         
@@ -208,7 +208,10 @@
     if (tableView == self.fristTableView) {
         NSString *secondTableArrayKey = [self.fristTableArray objectAtIndex:indexPath.row];
         self.secondTableArray = [self.itemDic objectForKey:secondTableArrayKey];
-        [self.secondTableView reloadData];
+        self.secondTableView = nil;
+        [self.secondTableView removeFromSuperview];
+        [self addSubview:self.secondTableView];
+//        [self.secondTableView reloadData];//不能用reload，之前的view还在，通过viewWithTag取到的View不是当前的
         TBMirrorDetailTableCell *cell = (TBMirrorDetailTableCell*)[tableView cellForRowAtIndexPath:indexPath];
         UILabel *propLabel = (UILabel*)[cell.contentView viewWithTag:111];
         //改变自己状态
@@ -256,6 +259,7 @@
             _secondTablePreClickBtn = propLabel;
             
         }
+
         
     }
 
