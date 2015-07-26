@@ -126,39 +126,39 @@
         TBMirrorSkuModel *skuModel = [self.secondTableArray objectAtIndex:indexPath.row];
         NSString *title = skuModel.cspuId;
         
-        CGRect labelFrame = CGRectMake(0, 0, 66*WITH_SCALE, 27);
-        UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-        label.text = title;
-        label.center = CGPointMake(TBMIRROR_CELL_HEIGHT/2,TBMIRROR_TABLE_HEIGHT/2);
-        [label sizeToFit];
-        if (label.frame.size.width < 66*WITH_SCALE) {
-            label.frame = labelFrame;
-            label.center = CGPointMake(TBMIRROR_CELL_HEIGHT/2,TBMIRROR_TABLE_HEIGHT/2);
-        }else{
-            label.frame = CGRectMake(label.frame.origin.x, label.frame.origin.y, label.frame.size.width, 27);
-        }
+//        CGRect labelFrame = CGRectMake(0, 0, 66*WITH_SCALE, 27);
+//        UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
+//        label.text = title;
+//        label.center = CGPointMake(TBMIRROR_CELL_HEIGHT/2,TBMIRROR_TABLE_HEIGHT/2);
+//        [label sizeToFit];
+//        if (label.frame.size.width < 66*WITH_SCALE) {
+//            label.frame = labelFrame;
+//            label.center = CGPointMake(TBMIRROR_CELL_HEIGHT/2,TBMIRROR_TABLE_HEIGHT/2);
+//        }else{
+//            label.frame = CGRectMake(label.frame.origin.x, label.frame.origin.y, label.frame.size.width, 27);
+//        }
+//        
+//        label.font = [UIFont systemFontOfSize:12];
+//        label.textColor = TBMIRROR_COLOR_GRAY_DARK;
+//        label.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
+//        label.layer.cornerRadius = 10.f;
+//        label.layer.masksToBounds = YES;
+//        label.textAlignment = NSTextAlignmentCenter;
+//        label.tag = 112;
+//        
+//        if (indexPath.row == 0) {
+//            label.textColor = [UIColor whiteColor];
+//            label.backgroundColor = TBMIRROR_COLOR_ORANGE;
+//            if (tableView == self.fristTableView) {
+//                _fristTablePreClickBtn = label;
+//            }else{
+//                _secondTablePreClickBtn = label;
+//            }
+//            
+//        }
         
-        label.font = [UIFont systemFontOfSize:12];
-        label.textColor = TBMIRROR_COLOR_GRAY_DARK;
-        label.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
-        label.layer.cornerRadius = 10.f;
-        label.layer.masksToBounds = YES;
-        label.textAlignment = NSTextAlignmentCenter;
-        label.tag = 112;
         
-        if (indexPath.row == 0) {
-            label.textColor = [UIColor whiteColor];
-            label.backgroundColor = TBMIRROR_COLOR_ORANGE;
-            if (tableView == self.fristTableView) {
-                _fristTablePreClickBtn = label;
-            }else{
-                _secondTablePreClickBtn = label;
-            }
-            
-        }
-        
-        
-        [cell.contentView addSubview:label];
+        [cell.contentView addSubview:[self getCellLabelWithTitle:title indexPath:indexPath tableView:tableView]];
 //        cell.contentView.backgroundColor = [UIColor orangeColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI / 2);
@@ -205,29 +205,16 @@
 
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    TBMirrorDetailTableCell *cell = (TBMirrorDetailTableCell*)[tableView cellForRowAtIndexPath:indexPath];
+    UILabel *propLabel = (UILabel*)[cell.contentView viewWithTag:111];
+    
+    //只要选中自己颜色，就是选中的样式
+    propLabel.backgroundColor = TBMIRROR_COLOR_ORANGE;
+    propLabel.textColor = [UIColor whiteColor];
+    
     if (tableView == self.fristTableView) {
-        NSString *secondTableArrayKey = [self.fristTableArray objectAtIndex:indexPath.row];
-        self.secondTableArray = [self.itemDic objectForKey:secondTableArrayKey];
-        self.secondTableView = nil;
-        [self.secondTableView removeFromSuperview];
-        [self addSubview:self.secondTableView];
-//        [self.secondTableView reloadData];//不能用reload，之前的view还在，通过viewWithTag取到的View不是当前的
-        TBMirrorDetailTableCell *cell = (TBMirrorDetailTableCell*)[tableView cellForRowAtIndexPath:indexPath];
-        UILabel *propLabel = (UILabel*)[cell.contentView viewWithTag:111];
-        //改变自己状态
-//        if (CGColorEqualToColor(propLabel.backgroundColor.CGColor, TBMIRROR_COLOR_ORANGE.CGColor)) {
-//            propLabel.backgroundColor = TBMIRROR_COLOR_GRAY_LIGHT;
-//            propLabel.textColor = TBMIRROR_COLOR_GRAY_DARK;
-//        }else{
-//            propLabel.backgroundColor = TBMIRROR_COLOR_ORANGE;
-//            propLabel.textColor = [UIColor whiteColor];
-//        }
-        
-        //只要选中自己颜色，就是选中的样式
-        propLabel.backgroundColor = TBMIRROR_COLOR_ORANGE;
-        propLabel.textColor = [UIColor whiteColor];
-
-        //改变别人状态
+        //改变上一次点击的状态，如果上次和这次点击的是同一个label，那么不做处理
         //如果点击的不是自己，即这一次点击的是另一个按钮，那么要改变之前点击的那个按钮的状态
         if (_fristTablePreClickBtn == nil) {
             _fristTablePreClickBtn = propLabel;
@@ -239,16 +226,18 @@
 
         }
         
+        //设置secondTableView
+        NSString *secondTableArrayKey = [self.fristTableArray objectAtIndex:indexPath.row];
+        self.secondTableArray = [self.itemDic objectForKey:secondTableArrayKey];
+        self.secondTableView = nil;
+        [self.secondTableView removeFromSuperview];
+        [self addSubview:self.secondTableView];
+        //[self.secondTableView reloadData];//不能用reload，之前的view还在，通过viewWithTag取到的View不是当前的
+        
 
     }else{
-       //上妆
-        TBMirrorDetailTableCell *cell = (TBMirrorDetailTableCell*)[tableView cellForRowAtIndexPath:indexPath];
-        UILabel *propLabel = (UILabel*)[cell.contentView viewWithTag:112];
-        //只要选中自己颜色，就是选中的样式
-        propLabel.backgroundColor = TBMIRROR_COLOR_ORANGE;
-        propLabel.textColor = [UIColor whiteColor];
         
-        //改变别人状态
+        //改变上一次点击的状态，如果上次和这次点击的是同一个label，那么不做处理
         //如果点击的不是自己，即这一次点击的是另一个按钮，那么要改变之前点击的那个按钮的状态
         if (_secondTablePreClickBtn == nil) {
             _secondTablePreClickBtn = propLabel;
@@ -259,6 +248,8 @@
             _secondTablePreClickBtn = propLabel;
             
         }
+        
+        //上妆
 
         
     }
