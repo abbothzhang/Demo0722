@@ -46,14 +46,13 @@
 @property (nonatomic,strong) UITableView                *secondTableView;
 
 //记录第一栏上一次的点击
+@property (nonatomic,strong) NSString                  *fristTablePreClickPropId;
 @property (nonatomic) NSInteger                        fristTablePreClickIndex;
 @property (nonatomic,strong) UILabel                   *fristTablePreClickBtn;
 //记录第二栏上一次的点击
+@property (nonatomic,strong) NSString                  *secondTablePreClickPropId;
 @property (nonatomic) NSInteger                        secondTablePreClickIndex;
 @property (nonatomic,strong) UILabel                   *secondTablePreClickBtn;
-
-
-
 
 
 
@@ -89,7 +88,7 @@
 -(void)setUpView{
     self.alpha = 0.8;
     [self addSubview:self.headView];
-    self.headView.price = @"888";//test
+//    self.headView.price = @"888";//test
     
     TBMirrorSkuView __weak *weakSelf = self;
     CGRect skuViewFrame;
@@ -258,8 +257,14 @@
         label.backgroundColor = TBMIRROR_COLOR_ORANGE;
         if (tableView == self.fristTableView) {
             _fristTablePreClickBtn = label;
+            
+            TBDetailSkuPropsValuesModel *valueModel = [self.fristPropsModel.values objectAtIndex:indexPath.row];
+            _fristTablePreClickPropId = [NSString stringWithFormat:@"%@:%@",self.fristPropsModel.propId,valueModel.valueId];
         }else{
             _secondTablePreClickBtn = label;
+            
+            TBDetailSkuPropsValuesModel *valueModel = [self.secondPropsModel.values objectAtIndex:indexPath.row];
+            _secondTablePreClickPropId = [NSString stringWithFormat:@"%@:%@",self.secondPropsModel.propId,valueModel.valueId];
         }
 
     }
@@ -290,6 +295,14 @@
 
         }
         
+        TBDetailSkuPropsValuesModel *valueModel = [self.fristPropsModel.values objectAtIndex:indexPath.row];
+        _fristTablePreClickPropId = [NSString stringWithFormat:@"%@:%@",self.fristPropsModel.propId,valueModel.valueId];
+        
+        NSString *skuKey = [NSString stringWithFormat:@"%@;%@",_fristTablePreClickPropId,_secondTablePreClickPropId];
+        NSString *skuId = [_itemModel.ppathIdmap objectForKey:skuKey];
+        TBMirrorSkuModel *skuModel = [_itemModel.mirrorSkuModelDic objectForKey:skuId];
+        self.headView.price = skuModel.price;
+        
 
     }else{
         
@@ -305,7 +318,13 @@
             _secondTablePreClickBtn = propLabel;
             
         }
+        TBDetailSkuPropsValuesModel *valueModel = [self.secondPropsModel.values objectAtIndex:indexPath.row];
+        _secondTablePreClickPropId = [NSString stringWithFormat:@"%@:%@",self.secondPropsModel.propId,valueModel.valueId];
         
+        NSString *skuKey = [NSString stringWithFormat:@"%@;%@",_fristTablePreClickPropId,_secondTablePreClickPropId];
+        NSString *skuId = [_itemModel.ppathIdmap objectForKey:skuKey];
+        TBMirrorSkuModel *skuModel = [_itemModel.mirrorSkuModelDic objectForKey:skuId];
+        self.headView.price = skuModel.price;
         //上妆
 
         

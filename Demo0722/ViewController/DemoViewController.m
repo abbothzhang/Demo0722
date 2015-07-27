@@ -47,7 +47,7 @@
     //mock data
     //tableview cell数据
         NSMutableArray<TBDetailSkuPropsValuesModel> *propValues1 = (NSMutableArray<TBDetailSkuPropsValuesModel>*)[[NSMutableArray alloc] initWithCapacity:3];
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 4; i++) {
         TBDetailSkuPropsValuesModel *propValueModel = [[TBDetailSkuPropsValuesModel alloc] init];
         propValueModel.valueId = [NSString stringWithFormat:@"11%d",i];
         propValueModel.name = [NSString stringWithFormat:@"11%d",i];//cell数据
@@ -55,10 +55,10 @@
     }
     
     NSMutableArray<TBDetailSkuPropsValuesModel> *propValues2 = (NSMutableArray<TBDetailSkuPropsValuesModel>*)[[NSMutableArray alloc] initWithCapacity:3];
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 5; i++) {
         TBDetailSkuPropsValuesModel *propValueModel = [[TBDetailSkuPropsValuesModel alloc] init];
-        propValueModel.valueId = [NSString stringWithFormat:@"12%d",i];
-        propValueModel.name = [NSString stringWithFormat:@"12%d",i];//cell数据
+        propValueModel.valueId = [NSString stringWithFormat:@"21%d",i];
+        propValueModel.name = [NSString stringWithFormat:@"21%d",i];//cell数据
         [propValues2 addObject:propValueModel];
     }
 
@@ -71,24 +71,57 @@
     }
     
     TBDetailSkuPropsModel *propModel1 = [[TBDetailSkuPropsModel alloc] init];
-    propModel1.propId = [NSString stringWithFormat:@"1%d",1];
+    propModel1.propId = [NSString stringWithFormat:@"prop1"];
     propModel1.values = propValues1;
     
     TBDetailSkuPropsModel *propModel2 = [[TBDetailSkuPropsModel alloc] init];
-    propModel2.propId = [NSString stringWithFormat:@"1%d",1];
+    propModel2.propId = [NSString stringWithFormat:@"prop2"];
     propModel2.values = propValues2;
 
     [skuProps addObject:propModel1];
     [skuProps addObject:propModel2];
 
     
+    
+    //ppath
+    NSMutableDictionary *ppathIdMap = [[NSMutableDictionary alloc] initWithCapacity:20];
+    NSMutableDictionary<TBMirrorSkuModel> *skuModelDic = (NSMutableDictionary<TBMirrorSkuModel> *)[[NSMutableDictionary alloc] initWithCapacity:20];
+    for (int i = 0; i < 4; i++) {
+        NSString *prop1valueKey = [NSString stringWithFormat:@"prop1:11%d",i];
+        for (int j = 0; j < 5; j++) {
+            NSString *prop2valueKey = [NSString stringWithFormat:@"prop2:21%d",j];
+            NSString *skuKey = [NSString stringWithFormat:@"%@;%@",prop1valueKey,prop2valueKey];
+            NSString *skuId = [NSString stringWithFormat:@"skuId_%d%d",i,j];
+            [ppathIdMap setValue:skuId forKey:skuKey];
+            
+            TBMirrorSkuModel *skuModel = [[TBMirrorSkuModel alloc] init];
+            skuModel.itemId = @"itemId111";
+            skuModel.skuId = skuId;
+            skuModel.quantity = i;
+            skuModel.price = [NSString stringWithFormat:@"%d",i*j];
+            skuModel.cspuId = @"cspuId111";//mock
+            if (i*j/2) {
+                skuModel.isSupportMakeUp = YES;
+            }else{
+                skuModel.isSupportMakeUp = NO;
+            }
+            
+            [skuModelDic setValue:skuModel forKey:skuId];
+            
+        }
+        
+        
+        
+    }
 
+    //skuModel
+    
     
     //生成itemId
     TBMirrorItemModel *itemModel = [[TBMirrorItemModel alloc] init];
     itemModel.skuProps = skuProps;//zhmark
-    
-    
+    itemModel.ppathIdmap = ppathIdMap;
+    itemModel.mirrorSkuModelDic = skuModelDic;
     
     
     
