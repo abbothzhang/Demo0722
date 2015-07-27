@@ -78,7 +78,7 @@
     propModel2.propId = [NSString stringWithFormat:@"1%d",1];
     propModel2.values = propValues2;
 
-//    [skuProps addObject:propModel1];
+    [skuProps addObject:propModel1];
     [skuProps addObject:propModel2];
 
     

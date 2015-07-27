@@ -16,6 +16,7 @@
 
 @interface TBMirrorSkuViewHead()
 
+@property (nonatomic,strong) UIButton       *arrowBtn;
 @property (nonatomic,strong) UILabel        *pricePreLabel;
 @property (nonatomic,strong) UILabel        *priceLabel;
 @property (nonatomic) BOOL                  isFold;
@@ -38,14 +39,14 @@
 -(void)setUpView{
     
     //arrowBtn
-    UIButton *arrowBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 30)];
-    arrowBtn.center = CGPointMake(self.frame.size.width/2, 12);
+    _arrowBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 30)];
+    _arrowBtn.center = CGPointMake(self.frame.size.width/2, 12);
 //    arrowBtn.backgroundColor = [UIColor orangeColor];
-    arrowBtn.titleLabel.font = [UIFont systemFontOfSize:16];//[TBIconFont iconFontWithSize:24*WITH_SCALE];
+    _arrowBtn.titleLabel.font = [UIFont systemFontOfSize:16];//[TBIconFont iconFontWithSize:24*WITH_SCALE];
     NSString * iconFontUnFold = @"^";//[TBIconFont iconFontUnicodeWithName:@"unfold"];
-    [arrowBtn setTitle:iconFontUnFold forState:UIControlStateNormal];
-    [arrowBtn setTitleColor:[UIColor colorWithHex:0x666666] forState:UIControlStateNormal];
-    [arrowBtn addTarget:self action:@selector(arrowClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_arrowBtn setTitle:iconFontUnFold forState:UIControlStateNormal];
+    [_arrowBtn setTitleColor:[UIColor colorWithHex:0x666666] forState:UIControlStateNormal];
+    [_arrowBtn addTarget:self action:@selector(arrowClick:) forControlEvents:UIControlEventTouchUpInside];
     
     //buyBtn
     UIButton *buyBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width-(12+72)*WITH_SCALE, 0, 72*WITH_SCALE, 24)];
@@ -65,11 +66,15 @@
     lineView.backgroundColor = [UIColor colorWithHex:0xe5e5e5];
     
 
-    [self addSubview:arrowBtn];
+    [self addSubview:_arrowBtn];
     [self addSubview:self.pricePreLabel];
     [self addSubview:self.priceLabel];
     [self addSubview:buyBtn];
     [self addSubview:lineView];
+}
+
+-(void)hideArrowBtn:(BOOL)isHide{
+    _arrowBtn.hidden = isHide;
 }
 
 #pragma mark - click 

@@ -21,5 +21,6 @@
 @property (nonatomic,strong) id<TBMirrorSkuViewHeadDelegate>            delegate;
 @property (nonatomic,strong) NSString                                   *price;
 
+-(void)hideArrowBtn:(BOOL)isHide;
 
 @end

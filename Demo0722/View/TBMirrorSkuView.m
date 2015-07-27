@@ -87,8 +87,10 @@
 
 
 -(void)setUpView{
+    self.alpha = 0.8;
     [self addSubview:self.headView];
     self.headView.price = @"888";//test
+    
     TBMirrorSkuView __weak *weakSelf = self;
     CGRect skuViewFrame;
     switch ([_itemModel.skuProps count]) {
@@ -99,6 +101,7 @@
             [UIView animateWithDuration:0.5f animations:^{
                 weakSelf.frame = skuViewFrame;
             }];
+            [self.headView hideArrowBtn:YES];
         }
             
             break;
@@ -135,11 +138,6 @@
             break;
     }
     
-    
-//    [self addSubview:self.fristPropNameLabel];
-//    [self addSubview:self.fristTableView];
-//    [self addSubview:self.secondPropNameLabel];
-//    [self addSubview:self.secondTableView];
     
 }
 
@@ -318,17 +316,37 @@
 #pragma mark - TBMirrorSkuViewHeadDelegate
 -(void)arrowBtnClicked:(BOOL)isFold{
     if (isFold) {
+        CGRect skuViewFrame;
+        switch ([_itemModel.skuProps count]) {
+            case 1:
+            {
+                CGFloat originY = TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y + (TBMIRROR_SKUVIEW_HEIGHT - TBMIRROR_SKUVIEW_HEADER_HEIGHT - TBMIRROR_SKUVIEW_PROP_HEIGHT);
+                skuViewFrame = CGRectMake(0,originY, self.frame.size.width, TBMIRROR_SKUVIEW_HEADER_HEIGHT+TBMIRROR_SKUVIEW_PROP_HEIGHT);
+            }
+                
+                break;
+            case 2:
+            {
+                skuViewFrame = CGRectMake(0, TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y, self.frame.size.width, TBMIRROR_SKUVIEW_HEIGHT);
+            }
+                break;
+                
+            default:
+                break;
+        }
+        
         TBMirrorSkuView __weak *weakSelf = self;
         [UIView animateWithDuration:0.5f animations:^{
-           weakSelf.frame = CGRectMake(0, TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y, self.frame.size.width, TBMIRROR_SKUVIEW_HEIGHT);
-
+            weakSelf.frame = skuViewFrame;
         }];
         
     }else{
+        
         TBMirrorSkuView __weak *weakSelf = self;
         [UIView animateWithDuration:0.5f animations:^{
             CGFloat originY = TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y + (TBMIRROR_SKUVIEW_HEIGHT - TBMIRROR_SKUVIEW_HEADER_HEIGHT);
-            weakSelf.frame = CGRectMake(0,originY, self.frame.size.width, TBMIRROR_SKUVIEW_HEADER_HEIGHT);
+            weakSelf.frame = CGRectMake(0,originY, weakSelf.frame.size.width, TBMIRROR_SKUVIEW_HEADER_HEIGHT);
+;
         }];
         
     }
