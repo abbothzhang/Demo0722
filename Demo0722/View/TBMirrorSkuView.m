@@ -116,6 +116,11 @@
         }
         
         NSString *title = [self.fristTableArray objectAtIndex:indexPath.row];
+//        cell remove
+        NSArray *subViews = [cell.contentView subviews];
+        for (UIView *subView in subViews) {
+            [subView removeFromSuperview];
+        }
         [cell.contentView addSubview:[self getCellLabelWithTitle:title indexPath:indexPath tableView:tableView]];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI / 2);
@@ -132,6 +137,11 @@
         
         TBMirrorSkuModel *skuModel = [self.secondTableArray objectAtIndex:indexPath.row];
         NSString *title = skuModel.cspuId;
+        
+        NSArray *subViews = [cell.contentView subviews];
+        for (UIView *subView in subViews) {
+            [subView removeFromSuperview];
+        }
         
         [cell.contentView addSubview:[self getCellLabelWithTitle:title indexPath:indexPath tableView:tableView]];
 //        cell.contentView.backgroundColor = [UIColor orangeColor];
