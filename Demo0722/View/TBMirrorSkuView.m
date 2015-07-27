@@ -43,8 +43,10 @@
 @property (nonatomic,strong) UITableView                *secondTableView;
 
 //记录第一栏上一次的点击
+@property (nonatomic) NSInteger                        fristTablePreClickIndex;
 @property (nonatomic,strong) UILabel                   *fristTablePreClickBtn;
 //记录第二栏上一次的点击
+@property (nonatomic) NSInteger                        secondTablePreClickIndex;
 @property (nonatomic,strong) UILabel                   *secondTablePreClickBtn;
 
 
@@ -174,7 +176,14 @@
     label.tag = 111;
     
     //第一个默认选上
-    if (indexPath.row == 0) {
+    NSInteger clickIndex;
+    if (tableView == self.fristTableView) {
+        clickIndex = _fristTablePreClickIndex;
+    }else{
+        clickIndex = _secondTablePreClickIndex;
+    }
+    
+    if (indexPath.row == clickIndex) {
         label.textColor = [UIColor whiteColor];
         label.backgroundColor = TBMIRROR_COLOR_ORANGE;
         if (tableView == self.fristTableView) {
@@ -201,6 +210,7 @@
     if (tableView == self.fristTableView) {
         //改变上一次点击的状态，如果上次和这次点击的是同一个label，那么不做处理
         //如果点击的不是自己，即这一次点击的是另一个按钮，那么要改变之前点击的那个按钮的状态
+        _fristTablePreClickIndex = indexPath.row;
         if (_fristTablePreClickBtn == nil) {
             _fristTablePreClickBtn = propLabel;
         }
@@ -212,6 +222,7 @@
         }
         
         //设置secondTableView
+        _secondTablePreClickIndex = 0;
         NSString *secondTableArrayKey = [self.fristTableArray objectAtIndex:indexPath.row];
         self.secondTableArray = [self.itemDic objectForKey:secondTableArrayKey];
         self.secondTableView = nil;
@@ -221,9 +232,9 @@
         
 
     }else{
-        
         //改变上一次点击的状态，如果上次和这次点击的是同一个label，那么不做处理
         //如果点击的不是自己，即这一次点击的是另一个按钮，那么要改变之前点击的那个按钮的状态
+        _secondTablePreClickIndex = indexPath.row;
         if (_secondTablePreClickBtn == nil) {
             _secondTablePreClickBtn = propLabel;
         }
