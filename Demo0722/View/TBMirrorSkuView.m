@@ -15,6 +15,8 @@
 
 #define TBMIRROR_SKUVIEW_HEIGHT                 189
 #define TBMIRROR_SKUVIEW_HEADER_HEIGHT          45
+#define TBMIRROR_SKUVIEW_PROP_HEIGHT            78
+
 
 #define TBMIRROR_CELL_HEIGHT                    78
 #define TBMIRROR_TABLE_HEIGHT                   40
@@ -78,7 +80,7 @@
 
     
     TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y = self.frame.origin.y;
-    self.frame = CGRectMake(0, TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y, self.frame.size.width, TBMIRROR_SKUVIEW_HEIGHT);
+    self.frame = CGRectMake(0, TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y+TBMIRROR_SKUVIEW_HEIGHT, self.frame.size.width, TBMIRROR_SKUVIEW_HEIGHT);
     [self setUpView];
     
 }
@@ -87,10 +89,58 @@
 -(void)setUpView{
     [self addSubview:self.headView];
     self.headView.price = @"888";//test
-    [self addSubview:self.fristPropNameLabel];
-    [self addSubview:self.fristTableView];
-    [self addSubview:self.secondPropNameLabel];
-    [self addSubview:self.secondTableView];
+    TBMirrorSkuView __weak *weakSelf = self;
+    CGRect skuViewFrame;
+    switch ([_itemModel.skuProps count]) {
+        case 0://没有类目
+        {
+            CGFloat originY = TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y + (TBMIRROR_SKUVIEW_HEIGHT - TBMIRROR_SKUVIEW_HEADER_HEIGHT);
+            skuViewFrame = CGRectMake(0,originY, weakSelf.frame.size.width, TBMIRROR_SKUVIEW_HEADER_HEIGHT);
+            [UIView animateWithDuration:0.5f animations:^{
+                weakSelf.frame = skuViewFrame;
+            }];
+        }
+            
+            break;
+        case 1:
+        {
+            CGFloat originY = TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y + (TBMIRROR_SKUVIEW_HEIGHT - TBMIRROR_SKUVIEW_HEADER_HEIGHT - TBMIRROR_SKUVIEW_PROP_HEIGHT);
+            skuViewFrame = CGRectMake(0,originY, weakSelf.frame.size.width, TBMIRROR_SKUVIEW_HEADER_HEIGHT+TBMIRROR_SKUVIEW_PROP_HEIGHT);
+            [UIView animateWithDuration:0.5f animations:^{
+                weakSelf.frame = skuViewFrame;
+//                [weakSelf addSubview:weakSelf.fristPropNameLabel];
+//                [weakSelf addSubview:weakSelf.fristTableView];
+            }];
+            [self addSubview:self.fristPropNameLabel];
+            [self addSubview:self.fristTableView];
+
+        }
+            
+            break;
+        case 2:
+        {
+            skuViewFrame = CGRectMake(0, TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y, weakSelf.frame.size.width, TBMIRROR_SKUVIEW_HEIGHT);
+            [UIView animateWithDuration:0.5f animations:^{
+                weakSelf.frame = skuViewFrame;
+            }];
+            
+            [self addSubview:self.fristPropNameLabel];
+            [self addSubview:self.fristTableView];
+            [self addSubview:self.secondPropNameLabel];
+            [self addSubview:self.secondTableView];
+
+        }
+            break;
+        default:
+            break;
+    }
+    
+    
+//    [self addSubview:self.fristPropNameLabel];
+//    [self addSubview:self.fristTableView];
+//    [self addSubview:self.secondPropNameLabel];
+//    [self addSubview:self.secondTableView];
+    
 }
 
 
@@ -109,17 +159,22 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     CGFloat cellHeight = TBMIRROR_CELL_HEIGHT;
+    TBDetailSkuPropsValuesModel *valueModel;
     if (tableView == self.fristTableView) {
-        TBDetailSkuPropsValuesModel *valueModel = [self.fristPropsModel.values objectAtIndex:indexPath.row];
-        NSString *title = valueModel.name;
-        CGRect labelFrame = CGRectMake(0, 0, 66*WITH_SCALE, 27);
-        UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-        label.text = title;
-        [label sizeToFit];
-        if (label.frame.size.width > cellHeight) {
-            cellHeight = label.frame.size.width+10;
-        }
+       valueModel = [self.fristPropsModel.values objectAtIndex:indexPath.row];
+    }else{
+        valueModel = [self.secondPropsModel.values objectAtIndex:indexPath.row];
     }
+    
+    NSString *title = valueModel.name;
+    CGRect labelFrame = CGRectMake(0, 0, 66*WITH_SCALE, 27);
+    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
+    label.text = title;
+    [label sizeToFit];
+    if (label.frame.size.width > cellHeight) {
+        cellHeight = label.frame.size.width+10;
+    }
+    
     
     return cellHeight;
 }
@@ -135,7 +190,7 @@
         
         TBDetailSkuPropsValuesModel *valueModel = [self.fristPropsModel.values objectAtIndex:indexPath.row];
         NSString *title = valueModel.name;
-//        cell remove
+        //cell remove
         NSArray *subViews = [cell.contentView subviews];
         for (UIView *subView in subViews) {
             [subView removeFromSuperview];
@@ -192,7 +247,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.tag = 111;
     
-    //第一个默认选上
+    //重新生成label时，将上次点击的按钮设置为选中状态，如果是第一次加载，则默认第一个选中
     NSInteger clickIndex;
     if (tableView == self.fristTableView) {
         clickIndex = _fristTablePreClickIndex;
@@ -219,7 +274,6 @@
     
     TBMirrorDetailTableCell *cell = (TBMirrorDetailTableCell*)[tableView cellForRowAtIndexPath:indexPath];
     UILabel *propLabel = (UILabel*)[cell.contentView viewWithTag:111];
-    
     //只要选中自己颜色，就是选中的样式
     propLabel.backgroundColor = TBMIRROR_COLOR_ORANGE;
     propLabel.textColor = [UIColor whiteColor];
@@ -238,15 +292,9 @@
 
         }
         
-        //设置secondTableView
-        _secondTablePreClickIndex = 0;
-        self.secondTableView = nil;
-        [self.secondTableView removeFromSuperview];
-        [self addSubview:self.secondTableView];
-        //[self.secondTableView reloadData];//不能用reload，之前的view还在，通过viewWithTag取到的View不是当前的
-        
 
     }else{
+        
         //改变上一次点击的状态，如果上次和这次点击的是同一个label，那么不做处理
         //如果点击的不是自己，即这一次点击的是另一个按钮，那么要改变之前点击的那个按钮的状态
         _secondTablePreClickIndex = indexPath.row;
@@ -330,7 +378,7 @@
         _fristTableView.center = CGPointMake(self.frame.size.width/2, 75+TBMIRROR_TABLE_HEIGHT/2);
         _fristTableView.dataSource = self;
         _fristTableView.delegate = self;
-//        _fristTableView.backgroundColor = [UIColor yellowColor];
+//        _fristTableView.backgroundColor = [UIColor greenColor];
         _fristTableView.showsVerticalScrollIndicator = NO;//隐藏滚动条
         _fristTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _fristTableView.transform = CGAffineTransformMakeRotation(-M_PI / 2);
