@@ -7,10 +7,11 @@
 //
 
 #import "TBMirrorSkuView.h"
-#import "TBMirrorSkuModel.h"
+#import "TBMirrorItemModel.h"
 #import "TBMirrorDetailTableCell.h"
 #import "TBMirrorSkuViewHead.h"
 #import "UIColor+Hex.h"
+
 
 #define TBMIRROR_SKUVIEW_HEIGHT                 189
 #define TBMIRROR_SKUVIEW_HEADER_HEIGHT          45
@@ -31,9 +32,9 @@
 }
 
 //data
-@property (nonatomic,strong) NSDictionary               *itemDic;
-@property (nonatomic,strong) NSArray                    *fristTableArray;
-@property (nonatomic,strong) NSArray                    *secondTableArray;
+@property (nonatomic,strong) TBMirrorItemModel          *itemModel;
+@property (nonatomic,strong) TBDetailSkuPropsModel      *fristPropsModel;
+@property (nonatomic,strong) TBDetailSkuPropsModel      *secondPropsModel;
 
 //view
 @property (nonatomic,strong) TBMirrorSkuViewHead        *headView;
@@ -58,14 +59,28 @@
 
 @implementation TBMirrorSkuView
 
+-(void)setItemModel:(TBMirrorItemModel *)itemModel{
+    _itemModel = itemModel;
+    switch ([_itemModel.skuProps count]) {
+        case 0://没有类目
+            
+            break;
+        case 1:
+            self.fristPropsModel = [itemModel.skuProps objectAtIndex:0];
+            break;
+        case 2:
+            self.fristPropsModel = [itemModel.skuProps objectAtIndex:0];
+            self.secondPropsModel = [itemModel.skuProps objectAtIndex:1];
+            break;
+        default:
+            break;
+    }
 
--(void)setData:(NSDictionary *)data{
-    self.itemDic = data;
-    self.fristTableArray = [self.itemDic allKeys];
+    
     TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y = self.frame.origin.y;
     self.frame = CGRectMake(0, TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y, self.frame.size.width, TBMIRROR_SKUVIEW_HEIGHT);
     [self setUpView];
-
+    
 }
 
 
@@ -84,9 +99,9 @@
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (tableView == self.fristTableView) {
-        return [self.itemDic count];
+        return [self.fristPropsModel.values count];
     }else{
-        return [self.secondTableArray count];
+        return [self.secondPropsModel.values count];
     }
     
     
@@ -95,7 +110,8 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     CGFloat cellHeight = TBMIRROR_CELL_HEIGHT;
     if (tableView == self.fristTableView) {
-        NSString *title = [self.fristTableArray objectAtIndex:indexPath.row];
+        TBDetailSkuPropsValuesModel *valueModel = [self.fristPropsModel.values objectAtIndex:indexPath.row];
+        NSString *title = valueModel.name;
         CGRect labelFrame = CGRectMake(0, 0, 66*WITH_SCALE, 27);
         UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
         label.text = title;
@@ -117,7 +133,8 @@
             cell = [[TBMirrorDetailTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TBMIRROR_TABLE1_REUSE];
         }
         
-        NSString *title = [self.fristTableArray objectAtIndex:indexPath.row];
+        TBDetailSkuPropsValuesModel *valueModel = [self.fristPropsModel.values objectAtIndex:indexPath.row];
+        NSString *title = valueModel.name;
 //        cell remove
         NSArray *subViews = [cell.contentView subviews];
         for (UIView *subView in subViews) {
@@ -137,8 +154,8 @@
             cell = [[TBMirrorDetailTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TBMIRROR_TABLE2_REUSE];
         }
         
-        TBMirrorSkuModel *skuModel = [self.secondTableArray objectAtIndex:indexPath.row];
-        NSString *title = skuModel.cspuId;
+        TBDetailSkuPropsValuesModel *valueModel = [self.secondPropsModel.values objectAtIndex:indexPath.row];
+        NSString *title = valueModel.name;
         
         NSArray *subViews = [cell.contentView subviews];
         for (UIView *subView in subViews) {
@@ -223,8 +240,6 @@
         
         //设置secondTableView
         _secondTablePreClickIndex = 0;
-        NSString *secondTableArrayKey = [self.fristTableArray objectAtIndex:indexPath.row];
-        self.secondTableArray = [self.itemDic objectForKey:secondTableArrayKey];
         self.secondTableView = nil;
         [self.secondTableView removeFromSuperview];
         [self addSubview:self.secondTableView];
@@ -319,8 +334,6 @@
         _fristTableView.showsVerticalScrollIndicator = NO;//隐藏滚动条
         _fristTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _fristTableView.transform = CGAffineTransformMakeRotation(-M_PI / 2);
-        //默认第一个选中
-        self.secondTableArray = [self.itemDic objectForKey:[self.fristTableArray objectAtIndex:0]];
     }
     return _fristTableView;
 }

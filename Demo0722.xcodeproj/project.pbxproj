@@ -118,10 +118,10 @@
 		500E8EE41B5F80C80035ABF7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				500E8EE51B5F83450035ABF7 /* TBMirrorSkuModel.h */,
-				500E8EE61B5F83450035ABF7 /* TBMirrorSkuModel.m */,
 				500E8EF71B60D4660035ABF7 /* TBMirrorItemModel.h */,
 				500E8EF81B60D4670035ABF7 /* TBMirrorItemModel.m */,
+				500E8EE51B5F83450035ABF7 /* TBMirrorSkuModel.h */,
+				500E8EE61B5F83450035ABF7 /* TBMirrorSkuModel.m */,
 				502A40B51B6142B10006E8E3 /* TBDetailSkuPropsModel.h */,
 				502A40B61B6142B10006E8E3 /* TBDetailSkuPropsModel.m */,
 				502A40B21B6142660006E8E3 /* TBDetailSkuPropsValuesModel.h */,

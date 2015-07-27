@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class TBMirrorItemModel;
+
 @protocol TBMirrorSkuViewDelegate <NSObject>
 
 -(void)buyBtnClicked;
@@ -18,6 +20,6 @@
 
 @property (nonatomic,strong) id<TBMirrorSkuViewDelegate>            delegate;
 
--(void)setData:(NSDictionary *)data;
+-(void)setItemModel:(TBMirrorItemModel *)itemModel;
 
 @end
