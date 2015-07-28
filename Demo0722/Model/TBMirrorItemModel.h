@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TBMirrorSkuModel.h"
-#import "TBDetailSkuPropsModel.h"
+#import "TBMirrorSkuPropsModel.h"
 
 @interface TBMirrorItemModel : NSObject
 
@@ -19,7 +19,7 @@
 //ppath 和 skuid 的map
 @property (nonatomic, strong) NSDictionary                              *ppathIdmap;
 //宝贝SKU对应的宝贝属性列表,最多只有两个
-@property (nonatomic, strong) NSArray<TBDetailSkuPropsModel>            *skuProps;
+@property (nonatomic, strong) NSArray<TBMirrorSkuPropsModel>            *skuProps;
 
 //sku对应的价格、库存、materialId、以及是否支持上妆，key是skuid
 @property (nonatomic, strong) NSMutableDictionary<TBMirrorSkuModel>     *mirrorSkuModelDic;

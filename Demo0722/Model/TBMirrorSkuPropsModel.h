@@ -1,5 +1,5 @@
 //
-//  TBDetailSkuPropsModel.h
+//  TBMirrorSkuPropsModel.h
 //  Demo0722
 //
 //  Created by albert on 15/7/23.
@@ -12,16 +12,16 @@
 
 
 
-@protocol TBDetailSkuPropsModel <NSObject>
+@protocol TBMirrorSkuPropsModel <NSObject>
 @end
 
-@interface TBDetailSkuPropsModel : NSObject
+@interface TBMirrorSkuPropsModel : NSObject
 
 //属性ID
 @property (nonatomic, copy) NSString* propId;
 
 //属性值列表;例如：颜色属性：红色，蓝色
-@property (nonatomic, strong) NSArray<TBDetailSkuPropsValuesModel> *values;
+@property (nonatomic, strong) NSMutableArray<TBDetailSkuPropsValuesModel> *values;
 
 //属性名称
 @property (nonatomic, copy) NSString *propName;

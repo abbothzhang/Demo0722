@@ -64,19 +64,21 @@
 
     
     
-    NSMutableArray<TBDetailSkuPropsModel> *skuProps = (NSMutableArray<TBDetailSkuPropsModel> *)[[NSMutableArray alloc] initWithCapacity:3];
+    NSMutableArray<TBMirrorSkuPropsModel> *skuProps = (NSMutableArray<TBMirrorSkuPropsModel> *)[[NSMutableArray alloc] initWithCapacity:3];
     
     for (int i = 0; i < 2; i++) {
         //宝贝SKU对应的宝贝属性列表
     }
     
-    TBDetailSkuPropsModel *propModel1 = [[TBDetailSkuPropsModel alloc] init];
+    TBMirrorSkuPropsModel *propModel1 = [[TBMirrorSkuPropsModel alloc] init];
     propModel1.propId = [NSString stringWithFormat:@"prop1"];
-    propModel1.values = propValues1;
+    propModel1.values = (NSMutableArray<TBDetailSkuPropsValuesModel> *)[[NSMutableArray alloc] initWithArray:propValues1];
+    propModel1.propName = @"大尺寸";
     
-    TBDetailSkuPropsModel *propModel2 = [[TBDetailSkuPropsModel alloc] init];
+    TBMirrorSkuPropsModel *propModel2 = [[TBMirrorSkuPropsModel alloc] init];
     propModel2.propId = [NSString stringWithFormat:@"prop2"];
     propModel2.values = propValues2;
+    propModel2.propName = @"小尺寸";
 
     [skuProps addObject:propModel1];
     [skuProps addObject:propModel2];
@@ -102,11 +104,15 @@
             skuModel.cspuId = @"cspuId111";//mock
             if (i*j/2) {
                 skuModel.isSupportMakeUp = YES;
+//                [skuModelDic setValue:skuModel forKey:skuId];
             }else{
                 skuModel.isSupportMakeUp = NO;
             }
+            //![skuId isEqualToString:@"skuId_00"]
+            if (![@"skuId_00skuId_01skuId_02skuId_03skuId_04" containsString:skuId]) {
+                [skuModelDic setValue:skuModel forKey:skuId];
+            }
             
-            [skuModelDic setValue:skuModel forKey:skuId];
             
         }
         

@@ -35,8 +35,8 @@
 
 //data
 @property (nonatomic,strong) TBMirrorItemModel          *itemModel;
-@property (nonatomic,strong) TBDetailSkuPropsModel      *fristPropsModel;
-@property (nonatomic,strong) TBDetailSkuPropsModel      *secondPropsModel;
+@property (nonatomic,strong) TBMirrorSkuPropsModel      *fristPropsModel;
+@property (nonatomic,strong) TBMirrorSkuPropsModel      *secondPropsModel;
 
 //view
 @property (nonatomic,strong) TBMirrorSkuViewHead        *headView;
@@ -67,11 +67,81 @@
             
             break;
         case 1:
+        {
             self.fristPropsModel = [itemModel.skuProps objectAtIndex:0];
+            
+            //处理数据，不能上妆的数据先剔除掉
+            NSArray *tempModel = [[NSArray alloc] initWithArray:self.fristPropsModel.values];
+            for (TBDetailSkuPropsValuesModel *valueModel in tempModel) {
+                //TODO:确认只有一个属性时propValueId格式
+                NSString *prop1ValueId = [NSString stringWithFormat:@"%@:%@",self.fristPropsModel.propId,valueModel.valueId];
+                NSString *skuId = [_itemModel.ppathIdmap objectForKey:prop1ValueId];
+                NSArray *skuIds = [_itemModel.mirrorSkuModelDic allKeys];
+                if (![skuIds containsObject:skuId]) {
+                    [self.fristPropsModel.values removeObject:valueModel];
+                }
+            }
+        }
             break;
+            
         case 2:
+        {
             self.fristPropsModel = [itemModel.skuProps objectAtIndex:0];
             self.secondPropsModel = [itemModel.skuProps objectAtIndex:1];
+            
+            //处理数据，不能上妆的数据先剔除掉
+            //1.先处理第一栏
+            NSArray *tempValue1Models = [[NSArray alloc] initWithArray:self.fristPropsModel.values];
+            for (TBDetailSkuPropsValuesModel *valueModel in tempValue1Models) {
+                NSString *propId = self.fristPropsModel.propId;
+                NSString *valueId = valueModel.valueId;
+                NSString *prop1ValueId = [NSString stringWithFormat:@"%@:%@",propId,valueId];
+                
+                int unSupportCount = 0;
+                NSArray *tempValue2Models = [[NSArray alloc] initWithArray:self.secondPropsModel.values];
+                for (TBDetailSkuPropsValuesModel *prop2ValueModel in tempValue2Models) {
+                    NSString *prop2ValueId = [NSString stringWithFormat:@"%@:%@",self.secondPropsModel.propId,prop2ValueModel.valueId];
+                    NSString *skuIdKey = [NSString stringWithFormat:@"%@;%@",prop1ValueId,prop2ValueId];
+                    NSString *skuId = [_itemModel.ppathIdmap objectForKey:skuIdKey];
+                    NSArray *skuIds = [_itemModel.mirrorSkuModelDic allKeys];
+                    if (![skuIds containsObject:skuId]) {
+                        unSupportCount++;
+                        if (unSupportCount == tempValue2Models.count) {
+                           [self.fristPropsModel.values removeObject:valueModel];
+                        }
+                        
+                        
+                    }
+                }
+                
+            }
+            
+            //2.处理第二栏
+            NSArray *tempValue2Models = [[NSArray alloc] initWithArray:self.secondPropsModel.values];
+            for (TBDetailSkuPropsValuesModel *valueModel in tempValue2Models) {
+                NSString *propId = self.secondPropsModel.propId;
+                NSString *valueId = valueModel.valueId;
+                NSString *prop2ValueId = [NSString stringWithFormat:@"%@:%@",propId,valueId];
+                
+                int unSupportCount = 0;
+                for (TBDetailSkuPropsValuesModel *prop1ValueModel in tempValue1Models) {
+                    NSString *prop1ValueId = [NSString stringWithFormat:@"%@:%@",self.fristPropsModel.propId,prop1ValueModel.valueId];
+                    NSString *skuIdKey = [NSString stringWithFormat:@"%@;%@",prop1ValueId,prop2ValueId];
+                    NSString *skuId = [_itemModel.ppathIdmap objectForKey:skuIdKey];
+                    NSArray *skuIds = [_itemModel.mirrorSkuModelDic allKeys];
+                    if (![skuIds containsObject:skuId]) {
+                        unSupportCount++;
+                        if (unSupportCount == tempValue1Models.count) {
+                            [self.secondPropsModel.values removeObject:valueModel];
+                        }
+                        
+                        continue;
+                    }
+                }
+                
+            }
+            
+        }
             break;
         default:
             break;
@@ -81,6 +151,10 @@
     TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y = self.frame.origin.y;
     self.frame = CGRectMake(0, TBMIRROR_SKUVIEW_UNFOLD_ORIGIN_Y+TBMIRROR_SKUVIEW_HEIGHT, self.frame.size.width, TBMIRROR_SKUVIEW_HEIGHT);
     [self setUpView];
+    
+}
+
+-(void)removeUnSupportDataWithPropModel:(TBMirrorSkuPropsModel *)propModel{
     
 }
 
@@ -159,6 +233,19 @@
     TBDetailSkuPropsValuesModel *valueModel;
     if (tableView == self.fristTableView) {
        valueModel = [self.fristPropsModel.values objectAtIndex:indexPath.row];
+//        NSString *propId = self.fristPropsModel.propId;
+//        NSString *valueId = valueModel.valueId;
+//        NSString *prop1ValueId = [NSString stringWithFormat:@"%@:%@",propId,valueId];
+//        for (TBDetailSkuPropsValuesModel *prop2ValueModel in self.secondPropsModel.values) {
+//            NSString *prop2ValueId = [NSString stringWithFormat:@"%@:%@",self.secondPropsModel.propId,prop2ValueModel.valueId];
+//            NSString *skuIdKey = [NSString stringWithFormat:@"%@;%@",prop1ValueId,prop2ValueId];
+//            NSString *skuId = [_itemModel.ppathIdmap objectForKey:skuIdKey];
+//            NSArray *skuIds = [_itemModel.mirrorSkuModelDic allKeys];
+//            if (![skuIds containsObject:skuId]) {
+//                return 0;
+//            }
+//        }
+
     }else{
         valueModel = [self.secondPropsModel.values objectAtIndex:indexPath.row];
     }
@@ -224,6 +311,32 @@
 }
 
 -(UILabel*)getCellLabelWithTitle:(NSString *)title indexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
+    //判断是否支持上妆，如果不支持上妆，返回nil
+//    if (tableView == self.fristTableView) {
+//        TBDetailSkuPropsValuesModel *valueModel = [self.fristPropsModel.values objectAtIndex:indexPath.row];
+//        NSString *propId = self.fristPropsModel.propId;
+//        NSString *valueId = valueModel.valueId;
+//        NSString *prop1ValueId = [NSString stringWithFormat:@"%@:%@",propId,valueId];
+//        for (TBDetailSkuPropsValuesModel *prop2ValueModel in self.secondPropsModel.values) {
+//            NSString *prop2ValueId = [NSString stringWithFormat:@"%@:%@",self.secondPropsModel.propId,prop2ValueModel.valueId];
+//            NSString *skuIdKey = [NSString stringWithFormat:@"%@;%@",prop1ValueId,prop2ValueId];
+//            NSString *skuId = [_itemModel.ppathIdmap objectForKey:skuIdKey];
+//            NSArray *skuIds = [_itemModel.mirrorSkuModelDic allKeys];
+//            if (![skuIds containsObject:skuId]) {
+//                return nil;
+//            }
+//        }
+//        
+//        
+//        
+//        
+//        
+//
+//        
+//    }else{
+//        
+//    }
+    
     CGRect labelFrame = CGRectMake(0, 0, 66*WITH_SCALE, 27);
     UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
     label.text = title;
@@ -326,7 +439,7 @@
         TBMirrorSkuModel *skuModel = [_itemModel.mirrorSkuModelDic objectForKey:skuId];
         self.headView.price = skuModel.price;
         //上妆
-
+        
         
     }
 
@@ -393,7 +506,7 @@
         _fristPropNameLabel.font = [UIFont systemFontOfSize:14.f];
         _fristPropNameLabel.textColor = TBMIRROR_COLOR_GRAY_DARK;
 //        _fristPropNameLabel.backgroundColor = [UIColor greenColor];//test
-        _fristPropNameLabel.text = @"款式";//test
+        _fristPropNameLabel.text = self.fristPropsModel.propName;
     }
     return _fristPropNameLabel;
 }
@@ -404,7 +517,7 @@
         _secondPropNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(TBMIRROR_SKUVIEW_MARGIN_LEFT, originY, 200, 14)];
         _secondPropNameLabel.font = [UIFont systemFontOfSize:14.f];
         _secondPropNameLabel.textColor = TBMIRROR_COLOR_GRAY_DARK;
-        _secondPropNameLabel.text = @"颜色";//test
+        _secondPropNameLabel.text = self.secondPropsModel.propName;
     }
     return _secondPropNameLabel;
 }
